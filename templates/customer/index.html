@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Site Metas -->
+    <title>在线购物比价引擎设计与实现</title>
+    <meta name="author" content="leiting">
+    <!-- Site Icons -->
+    <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="/static/images/logo.png">
+    <!-- animate CSS-->
+    <link href="/static/css/animate.css" rel="stylesheet" type="text/css"/>
+    <!-- Icons CSS-->
+    <link href="/static/css/icons.css" rel="stylesheet" type="text/css"/>
+    <!-- Sidebar CSS-->
+    <link href="/static/css/sidebar-menu.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/customer/css/bootstrap.min.css">
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="/static/customer/style.css">
+    <!-- Colors CSS -->
+    <!--Switchery-->
+    <link href="/static/plugins/switchery/css/switchery.min.css" rel="stylesheet"/>
+    <link href="/static/plugins/bootstrap-switch/bootstrap-switch.min.css" rel="stylesheet">
+    <!-- ALL VERSION CSS -->
+    <link rel="stylesheet" href="/static/customer/css/versions.css">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="/static/customer/css/responsive.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/customer/css/custom.css">
+</head>
+<body class="politics_version">
+<div class="topbar text-center hidden-xs">
+    <p>为了能有更好的浏览体验，我们需要您同意使用cookies，购物车功能还需要您扫码登录！</p>
+</div>
+<header class="header header_style_01">
+    <nav class="megamenu navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html"><img src="/static/customer/images/logo.png" alt="image"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a data-scroll-nav="0" href="#main-banner">首页</a></li>
+                    <li><a data-scroll-nav="1" href="#search">商品比价搜索</a></li>
+                    <li><a data-scroll-nav="2" href="#recommond">热卖商品推荐</a></li>
+                    <li><a data-scroll-nav="3" href="#cars">购物车商品历史价格查询</a></li>
+                    <li><a data-scroll-nav="4" href="#donate">about</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!--  这是轮播图片  -->
+<div id="main-banner" class="banner-one" data-scroll-index="0">
+    <div data-src="/static/customer/uploads/1.jpg"></div>
+    <div data-src="/static/customer/uploads/2.jpg"></div>
+    <div data-src="/static/customer/uploads/3.jpg"></div>
+    <div data-src="/static/customer/uploads/4.jpg"></div>
+</div>
+
+<!--    根据关键词搜索商品       -->
+<div id="search" data-scroll-index="1">
+    <div class="container">
+        <div class="section-title text-left" style="margin-top: 60PX">
+            <h3 class="fa fa-shopping-bag fa-2x"> search</h3>
+            <p class="lead">我们使用了多种不同的数据来源，为了能够更精准的搜索到您想要的商品，请您的输入更加精确！</p>
+            <div class="form-group bt-switch">
+                <div class="form-group row">
+                    <div style="display: grid;grid-template-columns:10% 80% 10%;grid-row-gap: 10px;">
+                        <div></div>
+                        <div id="container" class="search bar7" style="height: 50px;margin-top: 20px;">
+                            <input type="text" placeholder="请输入商品的详细名称" id="commondityname"
+                                   style="width: 500px">
+                            <button id="searchcom"></button>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end title -->
+        {# 分三栏显示信息#}
+        <div class="row">
+            <table>
+                <tbody id="comdatatable">
+                </tbody>
+            </table>
+        </div><!-- end row -->
+    </div><!-- end section -->
+</div>
+
+<!--    推荐商品展示      -->
+<div id="recommond" data-scroll-index="2" class="section wb">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3 class="fa fa-thumbs-o-up fa-2x"> 好物优惠推荐</h3>
+            <p class="lead">部分商品的优惠时间可能存在时效性，您点击链接后可能会跳转到第三方网站领取优惠券，理性购物，乐享生活。
+        </div><!-- end title -->
+
+        <div class="row">
+            {% for i in recommond %}
+            <div class="col-md-4">
+                <div class="participate-wrap">
+                    <figure>
+                        <img src={{ i.recom_img }} alt="" class="img-responsive">
+                        <figcaption>
+                            <a href={{ i.recom_id }} class="global-radius">
+                                <i class="flaticon-unlink"></i>
+                            </a>
+                        </figcaption>
+                    </figure>
+                    <div class="event_dit">
+                        <h4 class="titlesize" name="title">{{ i.recom_title }}</h4>
+                        <ul>
+                            <li><a> <i class="fa fa-calendar"></i> {{ i.recom_date|date:"Y-m-d H:i:s" }}</a></li>
+                            <li><a> <i class="fa fa-cny"></i>{{ i.recom_price }} </a></li>
+                        </ul>
+                        <p name="describe">{{ i.recom_desc }}</p>
+                    </div>
+                </div><!-- end participate -->
+            </div><!-- end col -->
+            {% endfor %}
+        </div><!-- end row -->
+    </div><!-- end container -->
+</div><!-- end section -->
+
+<!--    查看购物车里的商品     -->
+<div id="cars" data-scroll-index="3">
+    <div class="container">
+        <div class="section-title text-left" style="margin-top: 60PX">
+            <h3 class="fa fa-cart-plus fa-2x"> 购物车商品信息</h3>
+            <p class="lead">为了获取到您在购物网站上的购物车信息，我们需要您登录一些购物网站的帐号，将您想要查询购物车的相关网站切换到ON。
+            <div class="form-group bt-switch">
+                <div class="form-group row">
+                    <div style="display: grid;grid-template-columns: 10% 15% 10% 15% 10% 15% 25% ;grid-row-gap: 10px;">
+                        <label class="col-md-12 col-form-label">京东</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" data-on-color="success" data-off-color="danger" id="jdcheckbox"/>
+                        </div>
+                        <label class="col-md-12 col-form-label">淘宝</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" data-on-color="success" data-off-color="danger" id="taobaocheckbox"/>
+                        </div>
+                        <label class="col-md-12 col-form-label">苏宁</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" data-on-color="success" data-off-color="danger" id="sncheckbox"/>
+                        </div>
+                        <div class="card-body col-md-12" style="width: 100%;height:50px">
+                            <a id="docars" class="btn btn-light btn-radius btn-brd grd1"
+                               style="height: 32px;width:200px;padding-top: 4px">查询</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end title -->
+        {# 分三栏显示信息#}
+        <div class="row">
+            <table>
+                <tbody id="showcardatas">
+                </tbody>
+            </table>
+        </div><!-- end row -->
+    </div><!-- end section -->
+</div>
+
+<!--    about       -->
+<div id="donate" data-scroll-index="4" class="section db">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>About</h3>
+            <p class="lead">项目用Django的web框架和mysql数据库来实现的，网站中的图标，字体，布局采用了bootstrap、font
+                awesome等
+                <br>欢迎指正项目存在的问题，同时也欢迎您与我交流</p>
+        </div><!-- end title -->
+    </div><!-- end container -->
+</div><!-- end section -->
+
+<!--    版权    -->
+<div class="copyrights">
+    <div class="container">
+        <div class="footer-distributed">
+            <div>
+                <p>Copyright © 2020 GDUT <a href="https://www.gdut.edu.cn/" style="color: white">
+                    Guangdong University Of Technology</a> Power by
+                    <a href="https://www.django.cn/" style="color: white"> Django</a>、
+                    <a href="http://www.fontawesome.com.cn/" style="color: white">Font Awesome</a>、
+                    <a href="https://www.bootcss.com/" style="color: white">Bootstrap</a>、
+                    <a href="https://jquery.com/" style="color: white">jQuery</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div><!-- end container -->
+</div><!-- end copyrights -->
+
+<!--    返回最上面       -->
+<a id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+
+<!-- ALL JS FILES -->
+<script src="/static/customer/js/all.js"></script>
+<!-- Camera Slider -->
+<script src="/static/customer/js/jquery.mobile.customized.min.js"></script>
+<script src="/static/customer/js/jquery.easing.1.3.js"></script>
+<script src="/static/customer/js/camera.min.js"></script>
+<script src="/static/customer/js/scrollIt.min.js"></script>
+<!-- ALL PLUGINS -->
+<script src="/static/customer/js/custom.js"></script>
+<script src="/static/customer/js/jquery.vide.js"></script>
+
+<!--Switchery Js-->
+<script src="/static/plugins/switchery/js/switchery.min.js"></script>
+<script>
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    $('.js-switch').each(function () {
+        new Switchery($(this)[0], $(this).data());
+    });
+
+</script>
+<!--Bootstrap Switch Buttons-->
+<script src="/static/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+<script>
+    $(".bt-switch input[type='checkbox'], .bt-switch input[type='radio']").bootstrapSwitch();
+    var radioswitch = function () {
+        var bt = function () {
+            $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioState")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck", !1)
+            })
+        };
+        return {
+            init: function () {
+                bt()
+            }
+        }
+    }();
+    $(document).ready(function () {
+        radioswitch.init()
+    });
+
+</script>
+
+<script>
+    // {#    按钮的初始状态！ 全部开启#}
+    var snstatus = false;
+    var jdstatus = false;
+    var tbstatus = false;
+    // {#得到每一次点击按钮的事件结果#}
+    $('#sncheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("sncheckbox")
+        snstatus = state;
+        console.log("苏宁现在按钮的状态：", snstatus);
+    });
+    $('#taobaocheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("taobaocheckbox")
+        tbstatus = state;
+        console.log("淘宝现在按钮的状态：", tbstatus);
+    });
+
+    $('#jdcheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("jdcheckbox")
+        jdstatus = state;
+        console.log("京东现在按钮的状态：", jdstatus);
+    });
+
+    function search() {
+        $('#searchcom').click(function () {
+            console.log("这是点击搜索商品按钮的事件");
+            console.log("搜索的商品名", $('#commondityname').val());
+            $.ajax({
+                url: 'searchcom',
+                type: 'GET',
+                data: {'comname': $('#commondityname').val()},
+                success: function (arg) {
+                    // {#这是前台查询商品后的信息返回  把数据合成table然后输出#}
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        console.log("后台数据返回成功！！")
+                        console.log(mm.comdata)
+                        for (i in mm.comdata) {
+                            var tr;
+                            tr = '<div class="col-md-4" style="height:650px"><div class="product-grid"><div class="product-image"><a><img class="pic-1" src=' + mm.comdata[i][0] + '><img class="pic-2" src=' + mm.comdata[i][0] + '></a><ul class="social"><li><a href="#"   data-tip="添加到购物车"><i class="fa fa-shopping-cart"></i></a></li><li><a href="#"  data-tip="喜欢"><i class="fa fa-heart"></i></a></li><li><a href="#"    data-tip="比较"><i class="fa fa-random"></i></a></li><li><a href="#"   data-tip="快速浏览"><i class="fa fa-search"></i></a></li></ul></div><div class="product-content"><h3 class="title" style="height: 155px" ><a href=' + mm.comdata[i][1] + '>' + mm.comdata[i][2] + '</a></h3><div class="price col-lg-4">当前价格' + '<br>' + '¥' + mm.comdata[i][3] + '</div><div class="price hightly col-lg-4">上周最低' + '<br>' + '¥' + mm.comdata[i][4] + '</div><div class="price discount col-lg-4">历史最低' + '<br>' + '¥' + mm.comdata[i][6] + '</div><div class="col-lg-4 textother">' + mm.comdata[i][8] + '</div><div class="col-lg-4 textother">' + mm.comdata[i][9] + '</div><div class="col-lg-4 textother">' + mm.comdata[i][10] + '</div></div></div></div>'
+                            $('#comdatatable').append(tr);
+                        }
+                    } else {
+                        console.log("有问题")
+                    }
+                }
+            })
+        })
+    }
+
+    function cars() {
+        $('#docars').click(function () {
+            console.log("这是点击查询购物车的按钮事件");
+            console.log("京东：", jdstatus, "淘宝:", tbstatus, "苏宁:", snstatus)
+            $.ajax({
+                url: 'searchcars',
+                type: 'GET',
+                data: {'jd': jdstatus, 'tb': tbstatus, 'sn': snstatus,},
+                success: function (arg) {
+                    // {#这是前台查询商品后的信息返回  把数据合成table然后输出#}
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        console.log("后台数据返回成功！！")
+                        console.log(mm.cardatas)
+                        for (i in mm.cardatas) {
+                            var minprice = mm.cardatas[i][6];
+                            var nowprice = mm.cardatas[i][3];
+                            var tr;
+                            console.log("最低价格", minprice, "现在价格", nowprice)
+                            if (nowprice > minprice) {
+                                var tip = "不推荐购买";
+                                tr = '<div class="col-md-4"  style="height: 585px" ><div class="product-grid"><div class="product-image"><a><img class="pic-1" src=' + mm.cardatas[i][0] + '><img class="pic-2" src=' + mm.cardatas[i][0] + '></a><ul class="social"><li><a href="#"   data-tip="添加到购物车"><i class="fa fa-shopping-cart"></i></a></li><li><a href="#"  data-tip="喜欢"><i class="fa fa-heart"></i></a></li><li><a href="#"    data-tip="比较"><i class="fa fa-random"></i></a></li><li><a href="#"   data-tip="快速浏览"><i class="fa fa-search"></i></a></li></ul></div><div class="product-content"><h3 class="title" style="height:120px" ><a href=' + mm.cardatas[i][1] + '>' + mm.cardatas[i][2] + '</a></h3><div class="price col-lg-4">当前¥' + mm.cardatas[i][3] + '</div><div class="price hightly col-lg-4">最高¥' + mm.cardatas[i][4] + '<br>' + mm.cardatas[i][5] + '</div><div class="price discount col-lg-4">最低¥' + mm.cardatas[i][6] + '<br>' + mm.cardatas[i][7] + '</div><div class="col-lg-4 textother" style="color: red;font-weight: bold;font-size: 15px">' + tip + '</div><div class="col-lg-4 textother">' + mm.cardatas[i][9] + '</div><div class="col-lg-4 textother">' + mm.cardatas[i][10] + '</div></div></div></div>';
+                            } else {
+                                var tip = "推荐购买";
+                                tr = '<div class="col-md-4" style="height: 585px" ><div class="product-grid"><div class="product-image"><a><img class="pic-1" src=' + mm.cardatas[i][0] + '><img class="pic-2" src=' + mm.cardatas[i][0] + '></a><ul class="social"><li><a href="#"   data-tip="添加到购物车"><i class="fa fa-shopping-cart"></i></a></li><li><a href="#"  data-tip="喜欢"><i class="fa fa-heart"></i></a></li><li><a href="#"    data-tip="比较"><i class="fa fa-random"></i></a></li><li><a href="#"   data-tip="快速浏览"><i class="fa fa-search"></i></a></li></ul></div><div class="product-content" ><h3 class="title"  style="height:120px"><a href=' + mm.cardatas[i][1] + '>' + mm.cardatas[i][2] + '</a></h3><div class="price col-lg-4">当前¥' + mm.cardatas[i][3] + '</div><div class="price hightly col-lg-4">最高¥' + mm.cardatas[i][4] + '<br>' + mm.cardatas[i][5] + '</div><div class="price discount col-lg-4">最低¥' + mm.cardatas[i][6] + '<br>' + mm.cardatas[i][7] + '</div><div class="col-lg-4 textother" style="color: red;font-weight: bold;font-size: 15px">' + tip + '</div><div class="col-lg-4 textother">' + mm.cardatas[i][9] + '</div><div class="col-lg-4 textother">' + mm.cardatas[i][10] + '</div></div></div></div>';
+                            }
+                            $('#showcardatas').append(tr);
+                        }
+                    } else {
+                        console.log("有问题")
+                    }
+                }
+            })
+        })
+    }
+
+    $(function () {
+        search();
+        cars();
+    })
+</script>
+</body>
+</html>

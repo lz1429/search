@@ -1,0 +1,483 @@
+{% extends 'admin/layout.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/common.css" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <!--    编辑页面，隐藏起来了    -->
+            <div id="modal" class="hide">
+                <div class="col-md-11">
+                    <form class="was-validated">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <!--    表单  -->
+                                <div class="card ">
+                                    <div class="card-body">
+                                        {% csrf_token %}
+                                        <h4 class="form-header text-uppercase">
+                                            <i class="fa fa-user-circle-o"></i>
+                                            修改个人信息
+                                        </h4>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="editid" class="col-sm-2 col-form-label">管理员ID</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="editid" minlength="4"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="editname" class="col-sm-2 col-form-label">姓名</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="editname"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="editemail" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-6">
+                                                <input type="email" class="form-control" id="editemail" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="editphone" class="col-sm-2 col-form-label">电话</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="editphone"
+                                                       maxlength="11" minlength="11" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="editauth" class="col-sm-2 col-form-label">权限</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" id="editauth" name="budget" required>
+                                                    {% for row in auth %}
+                                                    <option value="{{ row.authority }}">{{ row.describe }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" style="height: 120px">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="avatarSlect" class="col-sm-2 col-form-label">头像</label>
+                                            <div class="col-sm-4" style="height: 120px">
+                                                <input type="file" class="form-control" name="avatarSlect"
+                                                       id="avatarSlect">
+                                            </div>
+                                            <!--    头像的预览    -->
+                                            <div class="col-sm-5">
+                                                <img style="max-height: 150px;max-width: 150px" name="avatarPreview"
+                                                     id="avatarPreview"
+                                                     id="editavatar" src="/static/images/uploadinfo.png">
+                                            </div>
+                                        </div>
+                                        <span id="error" style="color: red"></span>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <button class="btn btn-danger" id="canceledit" onclick="cancel()">
+                                                <i class="fa fa-times"></i>取消
+                                            </button>
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <button class="btn btn-success" id="editadmininfo"><i
+                                                    class="fa fa-check-square-o"></i>提交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--    两个表头    -->
+            <ul class="nav nav-tabs nav-tabs-success nav-justified top-icon" id="ullist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tabe-1">
+                        <i class="icon-people"></i>
+                        <span class="hidden-xs">管理员信息</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tabe-2">
+                        <i class="icon-settings"></i>
+                        <span class="hidden-xs">添加</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content" id="content">
+                <!--    管理员例表    -->
+                <div id="tabe-1" class="container tab-pane active col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fa fa-user-o fa-2x"> 管理员列表</i></h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" width="2%">ID</th>
+                                        <th scope="col" width="3%">姓名</th>
+                                        <th scope="col" width="5%">Email</th>
+                                        <th scope="col" width="5%">Avatar</th>
+                                        <th scope="col" width="5%">电话</th>
+                                        <th scope="col" width="10%">注册日期</th>
+                                        <th scope="col" width="10%">权限</th>
+                                        <th scope="col" width="20%">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in infolist %}
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.name }}</td>
+                                    <td>{{ row.email }}</td>
+                                    <td><img style="height: 50px;width: 50px" src="/static/images/{{ row.avatar }}">
+                                    </td>
+                                    <td>{{ row.phone }}</td>
+                                    <td>{{ row.register_data|date:"Y-m-d H:s:m" }}</td>
+                                    <td>{{ row.authority_fk.describe }}</td>
+                                    <td>
+                                        <a type="button" onclick="editadmin_info()"
+                                           class="btn btn-info btn-round waves-effect waves-light m-1">修改
+                                        </a>
+                                        <a type="button" href="{% url 'deladmin' row.id %}"
+                                           class=" btn btn-danger btn-round waves-effect waves-light m-1">删除
+                                        </a>
+                                    </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--    添加管理员    -->
+                <div id="tabe-2" class="container tab-pane fade">
+                    <form class="was-validated">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <div class="card ">
+                                    <!--    添加表单    -->
+                                    <div class="card-body">
+                                        {% csrf_token %}
+                                        <h4 class="form-header text-uppercase">
+                                            <i class="fa fa-user-circle-o fa-2x"> 添加管理员</i>
+                                        </h4>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="adminid" class="col-sm-2 col-form-label">管理员ID</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="adminid" minlength="4"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="adminpwd"
+                                                   class="col-sm-2 col-form-label">密码</label>
+                                            <div class="col-sm-6">
+                                                <input type="password" class="form-control" id="adminpwd"
+                                                       minlength="6"
+                                                       required>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="adminname" class="col-sm-2 col-form-label">姓名</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="adminname"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="adminemail" class="col-sm-2 col-form-label">邮箱</label>
+                                            <div class="col-sm-6">
+                                                <input type="email" class="form-control" id="adminemail" required
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="adminphone" class="col-sm-2 col-form-label">电话</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="adminphone"
+                                                       maxlength="11" minlength="11"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="auth" class="col-sm-2 col-form-label">权限</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" id="auth" name="budget" required>
+                                                    {% for row in auth %}
+                                                    <option value="{{ row.authority }}">{{ row.describe }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" style="height: 120px">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label for="addavatarSlect" class="col-sm-2 col-form-label">头像</label>
+                                            <div class="col-sm-4" style="height: 120px">
+                                                <input type="file" class="form-control" id="addavatarSlect"
+                                                       name="addavatarSlect">
+                                            </div>
+                                            <!--    头像的预览   -->
+                                            <div class="col-sm-5">
+                                                <img style="max-height: 150px;max-width: 150px"
+                                                     id="addavatarPreview" name="addavatarPreview"
+                                                     src=/static/images/uploadinfo.png>
+                                            </div>
+                                        </div>
+                                        <span id="editerror" style="color: red"></span>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <a class="btn btn-danger" id="canceladd" href="/admin/manageadmin.html">
+                                                <i class="fa fa-times"></i> 取消
+                                            </a>
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <button class="btn btn-success" id="addadmin">
+                                                <i class="fa fa-check-square-o"></i> 添加
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="/static/js/jquery.min.js"></script>
+<script>
+    $(function () {
+        bindAvatar();
+        addadmin();
+        editadmin_info();
+        cancel();
+        editinfo();
+        deladmininfo();
+    });
+
+    function bindAvatar() {
+        if (window.URL.createObjectURL) {
+            bindAvatar3();
+        } else if (window.FileReader) {
+            bindAvatar2();
+        } else {
+            bindAvatar1();
+        }
+    }
+
+    /*Ajax上传至后台并返回图片的url*/
+    function bindAvatar1() {
+        $("#avatarSlect").change(function () {
+            console.log("这是修改管理员信息的头像预览")
+            var csrf = $("input[name='csrfmiddlewaretoken']").val();
+            var formData = new FormData();
+            formData.append("csrfmiddlewaretoken", csrf);
+            formData.append('avatar', $("#avatarSlect")[0].files[0]);  /*获取上传的图片对象*/
+            $.ajax({
+                url: '/upload_avatar/',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (args) {
+                    console.log(args);  /*服务器端的图片地址*/
+                    $("#avatarPreview").attr('src', '/' + args);  /*预览图片*/
+                    $("#avatar").val('/' + args);  /*将服务端的图片url赋值给form表单的隐藏input标签*/
+                }
+            })
+        });
+        $("#addavatarSlect").change(function () {
+            console.log("这是添加管理员的头像预览")
+            var csrf = $("input[name='csrfmiddlewaretoken']").val();
+            var formData = new FormData();
+            formData.append("csrfmiddlewaretoken", csrf);
+            formData.append('avatar', $("#addavatarSlect")[0].files[0]);  /*获取上传的图片对象*/
+            $.ajax({
+                url: '/upload_avatar/',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (args) {
+                    console.log(args);  /*服务器端的图片地址*/
+                    $("#addavatarPreview").attr('src', '/' + args);  /*预览图片*/
+                }
+            })
+        })
+    }
+
+    // avatarSlect
+
+    /*window.FileReader本地预览*/
+    function bindAvatar2() {
+        console.log(2);
+        $("#avatarSlect").change(function () {
+            var obj = $("#avatarSlect")[0].files[0];
+            var fr = new FileReader();
+            fr.onload = function () {
+                $("#avatarPreview").attr('src', this.result);
+                console.log(this.result);
+                $("#avatar").val(this.result);
+            };
+            fr.readAsDataURL(obj);
+        })
+    }
+
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar3() {
+        console.log(3);
+        $("#avatarSlect").change(function () {
+            var obj = $("#avatarSlect")[0].files[0];
+            var wuc = window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src', wuc);
+            $("#avatar").val(wuc);
+        });
+        $("#addavatarSlect").change(function () {
+            var obj = $("#addavatarSlect")[0].files[0];
+            var wuc = window.URL.createObjectURL(obj);
+            $("#addavatarPreview").attr('src', wuc);
+            $("#avatar").val(wuc);
+        });
+    }
+
+    //  添加管理员
+    function addadmin() {
+        $('#addadmin').click(function () {
+            console.log("这是点击提交addmin");
+            var id = $('#adminid').val();
+            var name = $('#adminname').val();
+            var pwd = $('#adminpwd').val();
+            var email = $('#adminemail').val();
+            var phone = $('#adminphone').val();
+            var auth = $('#auth').val();
+            console.log("id:", id, "name:", name, "pwd:", pwd, "email:", email, "phone:", phone, "auth:", auth);
+            var formdata = new FormData();
+            formdata.append("id", id);
+            formdata.append("name", name);
+            formdata.append("pwd", pwd);
+            formdata.append("email", email);
+            formdata.append("phone", phone);
+            formdata.append("auth", auth);
+            formdata.append('avatar', $("#addavatarSlect")[0].files[0]);
+            $.ajax({
+                url: '/admin/addadmininfo',
+                type: 'POST',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                success: function (arg) {
+                    mm = JSON.parse(arg);
+                    console.log(mm);
+                    if (mm.status) {
+                        $('#error').text(mm.message);
+                        console.log("插入数据成功")
+                        location.href = "/admin/manageadmin.html"
+                    } else {
+                        $('#error').text(mm.message);
+                    }
+                }
+            })
+        })
+    }
+
+    // 编辑管理员
+    function editadmin_info() {
+        document.getElementById('ullist').classList.add('hide');
+        document.getElementById('content').classList.add('hide');
+        document.getElementById('modal').classList.remove('hide');
+        // 先获取本标签 在获取上层的标签
+        var v = $(this).parent().prevAll();
+        var id = $(v[6]).text();
+        var name = $(v[5]).text();
+        var email = $(v[4]).text();
+        var phone = $(v[2]).text();
+        $('#editid').val(id)
+        $('#editemail').val(email)
+        $('#editname').val(name)
+        $('#editphone').val(phone)
+    }
+
+    //  取消编辑管理员
+    function cancel() {
+        document.getElementById('ullist').classList.remove('hide');
+        document.getElementById('content').classList.remove('hide');
+        document.getElementById('modal').classList.add('hide');
+    }
+
+    //  编辑管理员表单提交
+    function editinfo() {
+        $('#editadmininfo').click(function () {
+            console.log("这是修改管理员的信息");
+            var id = $('#editid').val();
+            var name = $('#editname').val();
+            var email = $('#editemail').val();
+            var phone = $('#editphone').val();
+            var auth = $('#editauth').val();
+            console.log("id:", id, "name:", name, "email:", email, "phone:", phone, "auth:", auth)
+            var formdata = new FormData();
+            formdata.append("id", id);
+            formdata.append("name", name);
+            formdata.append("email", email);
+            formdata.append("phone", phone);
+            formdata.append("auth", auth);
+            formdata.append('avatar', $("#avatarSlect")[0].files[0]);
+            console.log(formdata);
+            $.ajax({
+                url: '/admin/editadmininfo',
+                type: 'POST',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                success: function (arg) {
+                    mm = JSON.parse(arg);
+                    console.log(mm);
+                    if (mm.status) {
+                        $('#error').text(mm.message);
+                        console.log("插入数据成功")
+                        location.href = "/admin/manageadmin.html"
+                    } else {
+                        $('#editerror').text(mm.message);
+                    }
+                }
+            })
+        })
+    }
+
+    // 删除管理员
+    function deladmininfo() {
+        $('#deladmin').click(function () {
+            console.log("这是删除管理员的信息提示框");
+            swal({
+                title: "Are you sure?",
+                text: "一旦删除，管理员的所有信息将全部消失且无法恢复！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "确认",
+                closeOnConfirm: false
+            })
+        })
+    }
+</script>
+{% endblock %}

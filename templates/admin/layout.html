@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>搜索引擎后台管理</title>
+    <!--  网页标志图标  -->
+    <link rel="icon" href="/static/images/logo.png">
+    <!--  Bootstrap core CSS  -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/static/plugins/bootstrap-switch/bootstrap-switch.min.css" rel="stylesheet"/>
+    <!--  animate CSS  -->
+    <link href="/static/css/animate.css" rel="stylesheet" type="text/css"/>
+    <!--  图标  -->
+    <link href="/static/css/icons.css" rel="stylesheet" type="text/css"/>
+    <!--  侧边栏  -->
+    <link href="/static/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <!--  侧边栏菜单  -->
+    <link href="/static/css/sidebar-menu.css" rel="stylesheet"/>
+    <!--  自定义样式  -->
+    <link href="/static/css/app-style.css" rel="stylesheet"/>
+    {% block css %}
+    {% endblock %}
+</head>
+<body class="bg-theme bg-theme2">
+<!--    封皮    -->
+<div id="wrapper">
+    <!--    左边栏    -->
+    <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
+        <!--    品牌标志    -->
+        <div class="brand-logo">
+            <a href="{% url 'index' %}">
+                <img src="/static/images/logo.png" class="logo-icon" alt="logo icon">
+                <p class="logo-text">搜索引擎后台管理</p>
+            </a>
+        </div>
+        <!--    用户详情    -->
+        <div class="user-details">
+            <!--    头像及姓名    -->
+            <div class="media align-items-center user-pointer collapsed" data-toggle="collapse"
+                 data-target="#user-dropdown">
+                <div class="avatar">
+                    <img class="mr-3 side-user-img" src=/static/images/{{ admininfo.avatar }} alt="user avatar">
+                </div>
+                <div class="media-body">
+                    <p class="side-user-name">{{ admininfo.name }}</p>
+                </div>
+            </div>
+            <!--    下拉框    -->
+            <div id="user-dropdown" class="collapse">
+                <ul class="user-setting-menu">
+                    <li><a href="profile.html"><i class="icon-user"></i> 个人信息</a></li>
+                    <li><a href="{% url 'logout' %}"><i class="icon-power"></i> 退出</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--    功能导航    -->
+        <ul class="sidebar-menu do-nicescrol" id="nav">
+            <li class="sidebar-header">后台功能</li>
+            <!--    数据管理    -->
+            <li class="active">
+                <a href="javaScript:void(0);" class="waves-effect">
+                    <i class="zmdi zmdi-chart"></i>
+                    <span>数据管理</span>
+                    <small class="badge float-right badge-light">New</small>
+                    <small class="badge float-right badge-warning">{{ renew }}</small>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{% url 'commondityinfo' %}"><i class="fa fa-shopping-bag"></i>商品数据</a></li>
+                    <li><a href="{% url 'priceinfo' %}"><i class="fa fa-percent"></i>价格数据</a></li>
+                    <li><a href="{% url 'recom_info' %}"><i class="fa fa-database"></i>推荐商品数据</a></li>
+                </ul>
+            </li>
+            <!--    爬虫管理    -->
+            <li id="sysmanage" class="active">
+                <a href="javaScript:void(0);" class="waves-effect">
+                    <i class="zmdi zmdi-settings"></i>
+                    <span>爬虫管理</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{% url 'spicom' %}"><i class="fa fa-globe"></i>商品搜索</a></li>
+                    <li><a href="{% url 'recommond' %}"><i class="fa fa-navicon"></i>推荐商品搜索</a></li>
+                </ul>
+            </li>
+            <!--    管理员    -->
+            <li id="manageadmin" class="active">
+                <a href="javaScript:void(0);" class="waves-effect">
+                    <i class="zmdi zmdi-pin-account"></i>
+                    <span>管理员</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{% url 'manad' %}"><i class="zmdi zmdi-accounts-add"></i>基本信息</a></li>
+                    <li><a href="{% url 'manauth' %}"><i class="zmdi zmdi-shield-security"></i>权限管理</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!--    顶部栏    -->
+    <header class="topbar-nav">
+        <nav class="navbar navbar-expand fixed-top">
+            <!--    收缩左边栏    -->
+            <ul class="navbar-nav mr-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link toggle-menu" href="javascript:void(0);">
+                        <i class="icon-menu menu-icon"></i>
+                    </a>
+                </li>
+            </ul>
+            <!--    右边账号信息    -->
+            <ul class="navbar-nav align-items-center right-nav-link">
+                <li class="nav-item">
+                    <!--    点击头像出来下面的信息    -->
+                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
+                        <span class="user-profile">
+                            <img src=/static/images/{{ admininfo.avatar }} class="img-circle" alt="user avatar">
+                        </span>
+                    </a>
+                    <!--    下拉菜单    -->
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li class="dropdown-item user-details">
+                            <a href="javaScript:void(0);">
+                                <div class="media">
+                                    <div class="avatar">
+                                        <img class="align-self-start mr-3"
+                                             src=/static/images/{{ admininfo.avatar }} alt="user avatar">
+                                    </div>
+                                    <div class="media-body">
+                                        <p class="mt-2 user-title">{{ admininfo.name }}</p>
+                                        <p class="user-subtitle" id="authority_fk_id">
+                                            {{ admininfo.authority_fk_id }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item">
+                            <a class="icon-user mr-2" href="profile.html"> 个人信息 </a>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item">
+                            <a class="icon-power mr-2" href="{% url 'logout' %}"> 退出 </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!--    内容    -->
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    页脚    -->
+    <footer class="footer">
+        <div class="container">
+            <div class="text-center">
+                <p>Copyright © 2020 GDUT
+                    <a href="https://www.gdut.edu.cn/">Guangdong University Of Technology</a>Power by
+                    <a href="https://www.django.cn/">django</a>、
+                    <a href="http://www.fontawesome.com.cn/">Font Awesome</a>、
+                    <a href="https://www.bootcss.com/">Bootstrap</a>、
+                    <a href="https://jquery.com/">jQuery</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!--    右边栏切换背景颜色    -->
+    <div class="right-sidebar">
+        <div class="switcher-icon">
+            <i class="zmdi zmdi-settings zmdi-hc-spin"></i>
+        </div>
+        <div class="right-sidebar-content">
+            <p class="mb-0">高斯模糊</p>
+            <hr>
+            <ul class="switcher">
+                <li id="theme1"></li>
+                <li id="theme2"></li>
+                <li id="theme3"></li>
+                <li id="theme4"></li>
+                <li id="theme5"></li>
+                <li id="theme6"></li>
+            </ul>
+            <p class="mb-0">背景颜色</p>
+            <hr>
+            <ul class="switcher">
+                <li id="theme7"></li>
+                <li id="theme8"></li>
+                <li id="theme9"></li>
+                <li id="theme10"></li>
+                <li id="theme11"></li>
+                <li id="theme12"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% block js %}
+{% endblock %}
+<!--  Bootstrap core JavaScript  -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+<!--  侧边栏 js  -->
+<script src="/static/plugins/simplebar/js/simplebar.js"></script>
+<!--  侧边栏 js  -->
+<script src="/static/js/sidebar-menu.js"></script>
+<!--  自定义 scripts  -->
+<script src="/static/js/app-script.js"></script>
+<script>
+    $(function () {
+        // 判断是否已登录
+        cookjudge();
+        //
+        notforward();
+        // 权限不够的相关功能页面隐藏起来
+        hideelement();
+    })
+
+    function cookjudge() {
+        //  当cookie为空的时候，跳转登录
+        console.log("cookie是否为空：", document.cookie == null);
+        if (document.cookie == null) {
+            location.replace("/admin/login.html");
+        }
+    }
+
+    function notforward() {
+        if (window.history && window.history.pushState) {
+            $(window).on('popstate', function () {
+                window.history.pushState('forward', null, '#');
+                window.history.forward(1);
+            });
+        }
+        window.history.pushState('forward', null, '#');
+        window.history.forward(1);
+    }
+
+    function hideelement() {
+        var authoid = $("#authority_fk_id").text();
+        console.log("用户的权限：", authoid);
+        if (authoid == 3) {
+            $("#manageadmin").hide();
+            $("#sysmanage").hide();
+        }
+        if (authoid == 2) {
+            $("#manageadmin").hide();
+        }
+    }
+</script>
+</body>
+</html>

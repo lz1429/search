@@ -1,0 +1,250 @@
+{% extends 'admin/layout.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title"><i class="fa fa-globe fa-2x"> 推荐商品管理</i></div>
+            <hr>
+            <!--    爬虫设置    -->
+            <div class="form-group bt-switch">
+                <div class="form-group row">
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">历史低价</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="historycheckbox"/>
+                        </div>
+                        <label class="col-md-12 col-form-label">历史爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="historylimit">
+                        </div>
+                    </div>
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">精选</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="jxcheckbox"/>
+                        </div>
+                        <label class="col-md-12 col-form-label">精选爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="jxlimit">
+                        </div>
+                    </div>
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">国内优惠</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="yhcheckbox"/>
+                        </div>
+                        <label class="col-md-12 col-form-label">优惠爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="yhlimit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!--    触发按钮    -->
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label"></label>
+                <button class="btn btn-info" id="dosearch"><i
+                        class="fa fa-search"></i>
+                    搜索
+                </button>
+                <a class="col-md-4 col-form-label"></a>
+                <button class="btn btn-success" id="save"><i
+                        class="fa fa-floppy-o"></i>
+                    保存
+                </button>
+            </div>
+            <hr>
+            <div class="card-title"><i class="fa fa-table fa-2x"> 推荐商品预览</i></div>
+            <hr>
+            <!--    爬取商品展示       -->
+            <div id="tabe" class="container tab-pane active col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="width: 10%">商品链接</th>
+                                    <th scope="col" style="width: 35%">商品名称</th>
+                                    <th scope="col" style="width: 10%">图片</th>
+                                    <th scope="col" style="width: 10%">价格</th>
+                                    <th scope="col" style="width: 35%">简介</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablecontent">
+                                {% for row in his %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                {% endfor %}
+                                {% for row in jx %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                {% endfor %}
+                                {% for row in yh %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- Bootstrap core JavaScript-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!--Switchery Js-->
+<script src="/static/plugins/switchery/js/switchery.min.js"></script>
+<script>
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    $('.js-switch').each(function () {
+        new Switchery($(this)[0], $(this).data());
+    });
+</script>
+<!--Bootstrap Switch Buttons-->
+<script src="/static/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+<script>
+    $(".bt-switch input[type='checkbox'], .bt-switch input[type='radio']").bootstrapSwitch();
+    var radioswitch = function () {
+        var bt = function () {
+            $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioState")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck", !1)
+            })
+        };
+        return {
+            init: function () {
+                bt()
+            }
+        }
+    }();
+    $(document).ready(function () {
+        radioswitch.init()
+    });
+</script>
+
+<script>
+    // {#    按钮的初始状态！ 全部开启#}
+    var hisstatus = true;
+    var yhstatus = true;
+    var jxstatus = true;
+    // {#得到每一次点击按钮的事件结果#}
+    $('#historycheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("历史低价：")
+        hisstatus = state;
+        console.log(state);
+    });
+    $('#jxcheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("精选按钮：")
+        jxstatus = state;
+        console.log(jxstatus);
+    });
+    $('#yhcheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("国内优惠按钮：")
+        yhstatus = state;
+        console.log(yhstatus);
+    });
+
+    function search() {
+        $('#dosearch').click(function () {
+            console.log("这是点击搜索按钮的事件");
+            var hisnum = $('#historylimit').val();
+            var jxnum = $('#jxlimit').val();
+            var yhnum = $('#yhlimit').val();
+            console.log("历史低价:", hisstatus, hisnum, "精选：", jxstatus, jxnum, "国内优惠：", yhstatus, yhnum)
+            $.ajax({
+                url: 'admin/dorecommond',
+                type: 'GET',
+                data: {
+                    'his': hisstatus,
+                    'hisnum': hisnum,
+                    'jx': jxstatus,
+                    'jxnum': jxnum,
+                    'yh': yhstatus,
+                    'yhnum': yhnum,
+                },
+                success: function (arg) {
+                    mm = JSON.parse(arg);
+                    console.log(mm.message);
+                    if (mm.status) {
+                        // {#成功则显示数据#}
+                        for (i in mm.his) {
+                            var tr;
+                            tr = '<td><a href=' + mm.his[i][0] + '>点我即达</a></td>' + '<td>' + mm.his[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.his[i][2] + '></td>' + '<td>' + mm.his[i][3] + '</td>' + '<td>' + mm.his[i][4] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                        for (i in mm.yh) {
+                            var tr;
+                            tr = '<td><a href=' + mm.yh[i][0] + '>点我即达</a></td>' + '<td>' + mm.yh[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.yh[i][2] + '></td>' + '<td>' + mm.yh[i][3] + '</td>' + '<td>' + mm.yh[i][4] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                        for (i in mm.jx) {
+                            var tr;
+                            tr = '<td><a href=' + mm.jx[i][0] + '>点我即达</a></td>' + '<td>' + mm.jx[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.jx[i][2] + '></td>' + '<td>' + mm.jx[i][3] + '</td>' + '<td>' + mm.jx[i][4] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                    } else {
+                        console.log("有问题")
+                    }
+                }
+            })
+        })
+    }
+
+    function saveinfo() {
+        $('#save').click(function () {
+            console.log("这是保存的事件")
+            $.ajax({
+                url: 'admin/dorecommond',
+                type: 'POST',
+                success: function (arg) {
+                    console.log(arg);
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        // {#数据保存成功#}
+                        var num = mm.insertnum
+                        var text = "成功保存" + num + "条数据"
+                        setTimeout(function () {
+                            window.location.reload(true);
+                        }, 2000)
+                        // {#location.reload(true)#}
+                        $('#save').text(text);
+                    } else {
+                        $('#save').text(mm.message);
+                    }
+                }
+            })
+        })
+    }
+</script>
+<script>
+    $(function () {
+        search();
+        saveinfo();
+    })
+</script>
+{% endblock %}

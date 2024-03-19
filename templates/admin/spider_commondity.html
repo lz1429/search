@@ -1,0 +1,257 @@
+{% extends 'admin/layout.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <!--    爬虫设置    -->
+            <div class="card-title"><i class="fa fa-globe fa-2x"> 爬虫设置</i></div>
+            <hr>
+            <!--    三平台爬取数量     -->
+            <div class="form-group bt-switch">
+                <div class="form-group row">
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">京东</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="jdcheckbox"/>
+                        </div>
+                        <label for="jdlimit" class="col-md-12 col-form-label">京东爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="jdlimit">
+                        </div>
+                    </div>
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">天猫商城</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="taobaocheckbox"/>
+                        </div>
+                        <label for="taobaolimit" class="col-md-12 col-form-label">天猫爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="taobaolimit">
+                        </div>
+                    </div>
+                    <div style="display: grid;grid-template-columns: 50% 50%;grid-template-rows: 50% 50%;grid-row-gap: 10px;margin: 5px 0px 5px 0px">
+                        <label class="col-md-12 col-form-label">苏宁</label>
+                        <div class="col-md-12">
+                            <input type="checkbox" checked data-size="normal" id="sncheckbox"/>
+                        </div>
+
+                        <label for="snlimit" class="col-md-12 col-form-label">苏宁爬取数量</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="snlimit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!--    爬取的商品名称     -->
+            <div class="form-group row">
+                <label for="searchname" class="col-md-2 col-form-label">查询的商品名称</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="searchname">
+                </div>
+                <button class="btn btn-info" id="dosearch">
+                    <i class="fa fa-search"></i> 搜索
+                </button>
+                <a class="col-md-1 col-form-label"></a>
+                <button class="btn btn-success" id="save">
+                    <i class="fa fa-floppy-o"></i> 保存
+                </button>
+            </div>
+            <hr>
+            <!--    爬取的结果   -->
+            <div class="card-title"><i class="fa fa-table fa-2x"> 爬取的结果</i></div>
+            <hr>
+            <!--    表格      -->
+            <div id="tabe" class="container tab-pane active col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width: 10%;word-break: break-all" scope="col">商品链接</th>
+                                    <th style="width: 35%;word-break: break-all" scope="col">商品名称</th>
+                                    <th style="width: 10%;word-break: break-all" scope="col">图片</th>
+                                    <th style="width: 15%;word-break: break-all" scope="col">店铺名称</th>
+                                    <th style="width: 10%;word-break: break-all" scope="col">价格</th>
+                                    <th style="width: 10%;word-break: break-all" scope="col">评论数</th>
+                                    <th style="width: 10%;word-break: break-all" scope="col">来源</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tablecontent">
+                                {% for row in jd %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                <td>{{ row.5 }}</td>
+                                <td>{{ row.6 }}</td>
+                                {% endfor %}
+                                {% for row in tb %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                <td>{{ row.5 }}</td>
+                                <td>{{ row.6 }}</td>
+                                {% endfor %}
+                                {% for row in sn %}
+                                <td>{{ row.0 }}</td>
+                                <td>{{ row.1 }}</td>
+                                <td>{{ row.2 }}</td>
+                                <td>{{ row.3 }}</td>
+                                <td>{{ row.4 }}</td>
+                                <td>{{ row.5 }}</td>
+                                <td>{{ row.6 }}</td>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- Bootstrap core JavaScript-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!--Switchery Js-->
+<script src="/static/plugins/switchery/js/switchery.min.js"></script>
+<!--Bootstrap Switch Buttons-->
+<script src="/static/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+<script>
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    $('.js-switch').each(function () {
+        new Switchery($(this)[0], $(this).data());
+    });
+
+    $(".bt-switch input[type='checkbox'], .bt-switch input[type='radio']").bootstrapSwitch();
+    var radioswitch = function () {
+        var bt = function () {
+            $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioState")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck")
+            }), $(".radio-switch").on("switch-change", function () {
+                $(".radio-switch").bootstrapSwitch("toggleRadioStateAllowUncheck", !1)
+            })
+        };
+        return {
+            init: function () {
+                bt()
+            }
+        }
+    }();
+    $(document).ready(function () {
+        radioswitch.init()
+    });
+</script>
+<script>
+    $(function () {
+        search();
+        saveinfo();
+    })
+
+    //  按钮的初始状态！ 全部开启
+    var snstatus = true;
+    var jdstatus = true;
+    var tbstatus = true;
+    //  得到每一次点击按钮的事件结果
+    $('#sncheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("sncheckbox")
+        snstatus = state;
+        console.log("苏宁现在按钮的状态：", snstatus);
+    });
+    $('#taobaocheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("taobaocheckbox")
+        tbstatus = state;
+        console.log("淘宝现在按钮的状态：", tbstatus);
+    });
+    $('#jdcheckbox').on('switchChange.bootstrapSwitch', function (event, state) {
+        console.log("jdcheckbox")
+        jdstatus = state;
+        console.log("京东现在按钮的状态：", jdstatus);
+    });
+
+    // 响应搜索点击
+    function search() {
+        $('#dosearch').click(function () {
+            console.log("这是点击搜索按钮的事件");
+            var jdnum = $('#jdlimit').val();
+            var tbnum = $('#taobaolimit').val();
+            var snnum = $('#snlimit').val();
+            var searchtext = $('#searchname').val();
+            console.log("jd:", jdstatus, jdnum, "sun:", snstatus, snnum, "tb:", tbstatus, tbnum, "搜索的信息：", searchtext);
+            $.ajax({
+                url: 'admin/dosearch',
+                type: 'GET',
+                data: {
+                    'jd': jdstatus,
+                    'jdnum': jdnum,
+                    'tb': tbstatus,
+                    'tbnum': tbnum,
+                    'sn': snstatus,
+                    'snnum': snnum,
+                    'setext': searchtext
+                },
+                success: function (arg) {
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        console.log("后台商品爬取数据返回成功！！")
+                        for (i in mm.jd) {
+                            var tr;
+                            tr = '<td><a href=' + mm.jd[i][0] + '>点我即达</a></td>' + '<td>' + mm.jd[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.jd[i][2] + '></td>' + '<td>' + mm.jd[i][3] + '</td>' + '<td>' + mm.jd[i][4] + '</td>' + '<td>' + mm.jd[i][5] + '</td>' + '<td>' + mm.jd[i][6] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                        for (i in mm.sn) {
+                            var tr;
+                            tr = '<td><a href=' + mm.sn[i][0] + '>点我即达</a></td>' + '<td>' + mm.sn[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.sn[i][2] + '></td>' + '<td>' + mm.sn[i][3] + '</td>' + '<td>' + mm.sn[i][4] + '</td>' + '<td>' + mm.sn[i][5] + '</td>' + '<td>' + mm.sn[i][6] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                        for (i in mm.tb) {
+                            var tr;
+                            tr = '<td><a href=' + mm.tb[i][0] + '>点我即达</a></td>' + '<td>' + mm.tb[i][1] + '</td>' + '<td><img style="height: 30px;width: 30px" src=' + mm.tb[i][2] + '></td>' + '<td>' + mm.tb[i][3] + '</td>' + '<td>' + mm.tb[i][4] + '</td>' + '<td>' + mm.tb[i][5] + '</td>' + '<td>' + mm.tb[i][6] + '</td>';
+                            $('#tablecontent').append('<tr>' + tr + '</tr>')
+                        }
+                    } else {
+                        console.log("商品爬取出了问题")
+                    }
+                }
+            })
+        })
+    }
+
+    // 保存信息到数据库
+    function saveinfo() {
+        $('#save').click(function () {
+            console.log("这是保存的事件")
+            $.ajax({
+                url: 'admin/dosearch',
+                type: 'POST',
+                success: function (arg) {
+                    console.log(arg);
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        var num = mm.insertnum
+                        var text = "成功保存" + num + "条数据"
+                        $('#save').text(text);
+                    } else {
+                        $('#save').text(mm.message);
+                    }
+                }
+            })
+        })
+    }
+</script>
+{% endblock %}

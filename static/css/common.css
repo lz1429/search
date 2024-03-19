@@ -1,0 +1,41 @@
+h1{
+    color:red;
+}
+.hide{
+    display: none;
+}
+.shadow{
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: -10px;/*为解决元素的边缘模糊的效果减弱*/
+    /*background-color: black;*/
+    /*background:url(/static/pic/1.jpg) no-repeat center center fixed;*/
+    filter:blur(60px);
+    z-index: 999;
+}
+.modal{
+      z-index: 1000;
+    /*padding: 40px;*/
+    opacity: 0.5;
+    /*background: url(2.jpg) center center / cover no-repeat fixed;*/
+    position:fixed;
+    height: 300px;
+    width: 500px;
+    background-color: white;
+    margin: 0 auto;
+}
+
+.jz{/* 设置div的内容居中*/
+    text-align: center;
+    line-height: 2;
+}
+.h2{line-height: 3;
+
+}
+.line3{line-height: 3}
+.btnmgtop{ margin-top: 30px ;}
+.leftmg{margin-right: 80px}
+.bt{margin-top: 30px ;margin-right: 80px;margin-bottom: 30px}

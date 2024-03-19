@@ -1,0 +1,127 @@
+{% extends "admin/layout.html" %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<i class="fa fa-bar-chart fa-2x"> 搜索引擎基本状态</i>
+<div class="card mt-3">
+    <div class="card-content">
+        <div class="row row-group m-0">
+            {% for i in info %}
+            {% for nums in numinfo %}
+            <!--  商品总数及增量  -->
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                    <h5 class="text-white mb-0">
+                        {{ i.0 }}
+                        <span class="float-right">
+                            <i class="fa fa-shopping-bag"></i>
+                        </span>
+                    </h5>
+                    <div class="progress my-3" style="height:3px;">
+                        <div class="progress-bar" style="width:35%"></div>
+                    </div>
+                    <p class="mb-0 text-white small-font">
+                        商品数量
+                        <span class="float-right">
+                            +{{ nums.0 }}<i class="zmdi zmdi-long-arrow-up"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <!--  推荐商品总数及增量  -->
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                    <h5 class="text-white mb-0">
+                        {{ i.1 }}
+                        <span class="float-right">
+                            <i class="fa fa-database"></i>
+                        </span>
+                    </h5>
+                    <div class="progress my-3" style="height:3px;">
+                        <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                    <p class="mb-0 text-white small-font">
+                        推荐商品数量
+                        <span class="float-right">
+                            +{{ nums.1 }}<i class="zmdi zmdi-long-arrow-up"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <!--  本应该是历史价格总数及增量的  -->
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                    <h5 class="text-white mb-0">
+                        {{ i.2 }}
+                        <span class="float-right">
+                            <i class="fa fa-cny"></i>
+                        </span>
+                    </h5>
+                    <div class="progress my-3" style="height:3px;">
+                        <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                    <p class="mb-0 text-white small-font">
+                        商品价格数量
+                        <span class="float-right">
+                            +{{ nums.2 }}<i class="zmdi zmdi-long-arrow-up"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <!--  管理员总数及增量  -->
+            <div class="col-12 col-lg-6 col-xl-3 border-light">
+                <div class="card-body">
+                    <h5 class="text-white mb-0">
+                        {{ i.3 }}
+                        <span class="float-right">
+                            <i class="fa fa-user-circle-o"></i>
+                        </span>
+                    </h5>
+                    <div class="progress my-3" style="height:3px;">
+                        <div class="progress-bar" style="width:55%"></div>
+                    </div>
+                    <p class="mb-0 text-white small-font">
+                        管理人员数量
+                        <span class="float-right">
+                            +{{ nums.3 }}<i class="zmdi zmdi-long-arrow-up"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!--  商品词云  -->
+    <div class="col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-cloud fa-2x"> 商品词云</i>
+                <hr>
+                <div name="词云" style="align-content: center;text-align: center">
+                    <img src="/static/wordcloud/product.jpg" style="width: 250px;height: 250px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  推荐商品词云  -->
+    <div class="col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-cloud fa-2x"> 推荐商品词云</i>
+                <hr>
+                <div name="词云" style="align-content: center;text-align: center">
+                    <img src="/static/wordcloud/jian_product.jpg" style="width: 250px;height: 250px">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

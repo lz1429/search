@@ -1,0 +1,116 @@
+{% extends 'admin/layout.html' %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-tabs nav-tabs-success nav-justified top-icon">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tabe-1">
+                        <i class="icon-people"></i>
+                        <span class="hidden-xs"> 管理员权限信息</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tabe-2">
+                        <i class="icon-settings"></i>
+                        <span class="hidden-xs">修改权限</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!--    tabe-1  -->
+                <div id="tabe-1" class="container tab-pane active col-lg-11">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fa fa-address-book-o fa-2x"> 管理员权限</i></h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">Avatar</th>
+                                        <th scope="col">注册日期</th>
+                                        <th scope="col">权限</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in infolist %}
+                                    <img>
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.name }}</td>
+                                    <td><img style="height: 50px;width: 50px"
+                                             src="/static/images/{{ row.avatar }}"></img></td>
+                                    <td>{{ row.register_data|date:"Y-m-d H:s:m" }}</td>
+                                    <td>{{ row.authority_fk.describe }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--    tabe-2  -->
+                <div id="tabe-2" class="container tab-pane fade">
+                    <form class="was-validated" method="post" action="{% url 'manauth' %}">
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <div class="card ">
+                                    <div class="card-body">
+                                        <h3 class="form-header text-uppercase">
+                                            <i class="fa fa-user-circle-o"></i>
+                                            修改管理员权限
+                                        </h3>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label class="col-sm-2 col-form-label">姓名</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name="adminname">
+                                                    {% for row in infolist %}
+                                                    <option>{{ row.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-1 col-form-label"></div>
+                                            <label class="col-sm-2 col-form-label">权限</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name="authid">
+                                                    {% for row in authinfo %}
+                                                    <option>{{ row.describe }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <span id="error" style="color: red"></span>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <a class="btn btn-danger" type="reset" href="{% url 'manauth' %}">
+                                                <i class="fa fa-times"></i>取消
+                                            </a>
+                                            <div class="col-sm-3 col-form-label"></div>
+                                            <button type="submit" class="btn btn-success" id="addadmin">
+                                                <i class="fa fa-check-square-o"></i>修改
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,317 @@
+{% extends "admin/layout.html" %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!--    左边信息展示    -->
+    <div class="col-lg-4">
+        <div class="card profile-card-2">
+            <!--    背景图片    -->
+            <div class="card-img-block">
+                <img class="img-fluid" src="/static/images/gallery/library.jpg" alt="Card image cap">
+            </div>
+            <div class="card-body pt-5">
+                <img src="/static/images/{{ admininfo.avatar }}" alt="profile-image" class="profile">
+                <p class="card-title">{{ admininfo.name }}</p>
+            </div>
+            <!--    信息展示    -->
+            <div class="card-body border-top border-light">
+                <div class="media align-items-center">
+                    <p>邮箱地址：{{ admininfo.email }}</p>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <p>电话号码：{{ admininfo.phone }}</p>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <p>注册日期：{{ admininfo.register_data|date:"Y-m-d H:i:s" }}</p>
+                </div>
+                <hr>
+                <div class="media align-items-center">
+                    <p>权限类别：{{ admininfo.authority_fk_id }} {{ admininfo.authority_fk.describe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--   右边信息修改    -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <!--    修改信息与修改密码 导航    -->
+                <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" data-target="#profile" data-toggle="pill" class="nav-link active">
+                            <i class="icon-user"></i>
+                            <span class="hidden-xs">修改信息</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" data-target="#changpwd" data-toggle="pill" class="nav-link">
+                            <i class="fa fa-key"></i>
+                            <span class="hidden-xs">修改密码</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content p-3 form-group row">
+                    <div class="col-lg-3"></div>
+                    <!--    修改信息    -->
+                    <div class="tab-pane active row" id="profile">
+                        <div class="col-lg-4"></div>
+                        <label class="col-lg-3 col-form-label form-control-label"></label>
+                        <form class="col-lg-8" method="post"
+                              enctype="multipart/form-data" action="{% url 'editprofile' admininfo.id %}">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">姓名</label>
+                                <div class="col-lg-9">
+                                    <input name="name" id="username"
+                                           class="form-control" type="text" value={{ admininfo.name }}>
+                                </div>
+                                <input id="uid" type="hidden" value={{ admininfo.id }}>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-3 col-form-label form-control-label"></div>
+                                <span style="color: red;" class="col-lg-9" id="namewarning"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">邮箱</label>
+                                <div class="col-lg-9">
+                                    <input name="email" class="form-control"
+                                           type="email" id="emailinput" value={{ admininfo.email }}>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-3 col-form-label form-control-label"></div>
+                                <span style="color: red;" class="col-lg-9" id="emailwarning"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label form-control-label">头像</label>
+                                <div class="col-lg-7">
+                                    <input id="avatarSlect" type="file" name="img">
+                                </div>
+                                <div class="col-lg-2">
+                                    <img style="max-height:200px; max-width: 200px"
+                                         id="avatarPreview" src=/static/images/uploadinfo.png>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-3 col-form-label form-control-label"></div>
+                                <span class="col-lg-9" style="color: red;" id="avatarwarning"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3"></label>
+                                <a class="btn btn-secondary" href="/admin/profile.html">取消</a>
+                                <div class="col-lg-3"></div>
+                                <input type="submit" class="btn btn-primary" value="提交">
+                            </div>
+                        </form>
+                    </div>
+                    <!--    修改密码    -->
+                    <div class="tab-pane" id="changpwd">
+                        <div class="form-group row"></div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">邮箱</label>
+                            <div class="col-lg-7">
+                                <input id="email" class="form-control" readOnly="true"
+                                       type="email" value={{ admininfo.email }}>
+                            </div>
+                            <div>
+                                <a style="cursor: pointer;" class="fa fa-envelope" id="sendsalt"> 验证</a>
+                            </div>
+                        </div>
+                        <span id="yanzhengma" style="color: red;align-content: center"></span>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">验证码</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" id="salt">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">原密码</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="password" id="pwd">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">新密码</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="password" id="newpwd">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">确认密码</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="password" id="newpwdrep">
+                            </div>
+                        </div>
+                        <span id="pwderror" style="color: red"></span>
+                        <div class="form-group row">
+                            <label class="col-lg-3"></label>
+                            <a class="btn btn-secondary" href="/admin/profile.html">取消</a>
+                            <div class="col-lg-3"></div>
+                            <input type="button" class="btn btn-primary" id="editpwd" value="提交">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="/static/js/jquery.min.js"></script>
+<script>
+    $(function () {
+        // 发送验证码
+        $('#sendsalt').click(function () {
+            $.ajax({
+                url: '/admin/editpwd.html',
+                type: 'GET',
+                data: {'email': $('#email').val(), 'uname': $('#username').val()},
+                success: function (arg) {
+                    console.log(arg);
+                    mm = JSON.parse(arg);
+                    if (mm.status) {
+                        $('#yanzhengma').text(mm.message);
+                    } else {
+                        $('#yanzhengma').text(mm.message);
+                    }
+                }
+            })
+        });
+        // 修改密码后的提交
+        $('#editpwd').click(function () {
+            if ($('#pwd').val() == "" || $('#newpwd').val() == "" || $('#newpwdrep').val() == "") {
+                $('#pwderror').text("密码不能为空！");
+            } else if ($('#salt').val() == "") {
+                $('#pwderror').text("验证码为空！");
+            } else {
+                $.ajax({
+                    url: '/admin/editpwd.html',
+                    type: 'POST',
+                    data: {
+                        'id': $('#uid').val(),
+                        'salt': $('#salt').val(),
+                        'oldpwd': $('#pwd').val(),
+                        'newpwd': $('#newpwd').val(),
+                        'newpwdrep': $('#newpwdrep').val()
+                    },
+                    success: function (arg) {
+                        console.log(arg);
+                        mm = JSON.parse(arg);
+                        if (mm.status) {
+                            $('#pwderror').text(mm.message);
+                            location.href = "/admin/login.html"
+                        } else {
+                            $('#pwderror').text(mm.message);
+                        }
+                    }
+                })
+            }
+        });
+
+        // 预览头像
+        bindAvatar();
+        // 修改邮箱时触发谨慎修改的提示
+        document.getElementById("emailinput").oninput = function () {
+            emailwarning()
+        };
+        // 上传的新头像如果占用空间太大将触发提示
+        document.getElementById("avatarSlect").oninput = function () {
+            avatarupload()
+        };
+    })
+
+
+    function emailwarning() {
+        console.log("修改email的提示");
+        var text = "邮箱作为找回密码的重要凭证，谨慎修改！";
+        document.getElementById("emailwarning").innerText = text;
+    }
+
+    function avatarupload() {
+        console.log("avatars上传！！");
+        var text = "为了正常显示请上传小于200px*200px,大小小于1m的图片！！";
+        var file = $("#avatarSlect")[0].files[0];
+        var filesize = file.size;
+        console.log("文件的大小", filesize);
+        if (filesize > 1050000) {
+            /*文件太大*/
+            document.getElementById("avatarwarning").innerText = text;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // 实现头像预览功能的三种方法
+    function bindAvatar() {
+        if (window.URL.createObjectURL) {
+            bindAvatar3();  // 目前使用
+        } else if (window.FileReader) {
+            bindAvatar2();
+        } else {
+            bindAvatar1();
+        }
+    }
+
+    /*Ajax上传至后台并返回图片的url*/
+    function bindAvatar1() {
+        $("#avatarSlect").change(function () {
+            var csrf = $("input[name='csrfmiddlewaretoken']").val();
+            var formData = new FormData();
+            var file = $("#avatarSlect")[0].files[0];
+            var filesize = file.size;
+            console.log("判断文件大小的结果：", filesize);
+            if (filesize < 1050000) {
+                console.log("图片的保存");
+                formData.append("csrfmiddlewaretoken", csrf);
+                formData.append('avatar', $("#avatarSlect")[0].files[0]);  /*获取上传的图片对象*/
+                $.ajax({
+                    url: '/upload_avatar/',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (args) {
+                        console.log(args);  /*服务器端的图片地址*/
+                        $("#avatarPreview").attr('src', '/' + args);  /*预览图片*/
+                    }
+                })
+            } else {
+                // var text = "为了正常显示请上传小于200px*200px,大小小于1m的图片！！";
+                // document.getElementById("avatarwarning").innerText = text;
+                $("#avatarwarning").text("为了正常显示请上传小于200px*200px,大小小于1m的图片！！");
+            }
+        })
+    }
+
+    /*window.FileReader本地预览*/
+    function bindAvatar2() {
+        console.log(2);
+        $("#avatarSlect").change(function () {
+            var obj = $("#avatarSlect")[0].files[0];
+            var fr = new FileReader();
+            fr.onload = function () {
+                $("#avatarPreview").attr('src', this.result);
+                console.log(this.result);
+            };
+            fr.readAsDataURL(obj);
+        })
+    }
+
+    /*window.URL.createObjectURL本地预览*/
+    function bindAvatar3() {
+        console.log(3);
+        $("#avatarSlect").change(function () {
+            var obj = $("#avatarSlect")[0].files[0];
+            var wuc = window.URL.createObjectURL(obj);
+            $("#avatarPreview").attr('src', wuc);
+        })
+    }
+</script>
+{% endblock %}

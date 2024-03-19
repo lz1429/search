@@ -1,0 +1,129 @@
+{% extends "admin/layout.html" %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-table fa-2x">推荐商品数据</i></div>
+            <div class="col-lg-12" style="display: grid;grid-template-columns: 80% 20%;margin: 20px 0px 0px 0px">
+                <div class="col-log-11">
+                    <div class="dt-buttons btn-group">
+                        <button class="btn btn-light buttons-copy buttons-html5" tabindex="0"
+                                aria-controls="example"
+                                type="button"><span>复制</span></button>
+                        <button class="btn btn-light buttons-excel buttons-html5" tabindex="0"
+                                aria-controls="example"
+                                type="button"><span>保存到excel</span></button>
+                        <button class="btn btn-light buttons-pdf buttons-html5" tabindex="0" aria-controls="example"
+                                type="button"><span>PDF</span></button>
+                        <button class="btn btn-light buttons-print" tabindex="0" aria-controls="example"
+                                type="button"><span>打印</span></button>
+                    </div>
+                </div>
+                <div class="col-log-1">
+                    <div id="example_filter" class="dataTables_filter">
+                        <input type="search" class="form-control form-control-sm"
+                               placeholder="搜索" aria-controls="example">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width:25%" scope="col">商品名称</th>
+                                    <th style="width:10% ;word-break: break-all" scope="col">图片</th>
+                                    <th style="width:10%" scope="col">价格</th>
+                                    <th style="width:30%" scope="col">基本描述</th>
+                                    <th style="width:15%" scope="col">时间</th>
+                                    <th style="width:10%" scope="col" id="recomoperation">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in comlist %}
+                                <tr>
+                                    <td><a href="{{ row.recom_id }}">{{ row.recom_title }}</a></td>
+                                    <td><img style="height: 50px;" src={{ row.recom_img }}></img></td>
+                                    <td>{{ row.recom_price }}</td>
+                                    <td>{{ row.recom_desc }}</td>
+                                    <td>{{ row.recom_date|date:"Y-m-d H:i:s" }}</td>
+                                    <td onclick="del(this)" type={{ row.recom_id }}
+                                        class=" btn btn-danger btn-round waves-effect waves-light m-1">删除
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body col-lg-12">
+                <div class="col-lg-8 " style="float: right">
+                    <ul class="pagination">
+                        {% if comlist.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?p={{ comlist.previous_page_number }}">上一页</a>
+                        </li>
+                        {% endif %}
+                        {% for i in pagerange %}
+                        <li class="page-item"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+
+                        {% if comlist.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?p={{ comlist.next_page_number }}">下一页</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/dataTables.bootstrap4.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/dataTables.buttons.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/buttons.bootstrap4.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/jszip.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/pdfmake.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/vfs_fonts.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/buttons.html5.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/buttons.print.min.js"></script>
+<script src="/static/plugins/bootstrap-datatable/js/buttons.colVis.min.js"></script>
+<script>
+    function del(info) {
+        var urls = $(info).attr("type")
+        $.ajax({
+            url: '/admin/delrecom',
+            type: 'POST',
+            data: {'url': urls},
+            success: function (arg) {
+                console.log(arg);
+                mm = JSON.parse(arg);
+                if (mm.status) {
+                    // $('#pwderror').text(mm.message);
+                    location.reload()
+                } else {
+                    // $('#pwderror').text(mm.message);
+                    alert(mm.message)
+                }
+            }
+        })
+    }
+
+</script>
+{% endblock %}
